@@ -1,0 +1,244 @@
+{{extend 'layout.html'}}
+<link rel="stylesheet" href="{{=URL('static', 'js_and_css/ui.theme.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{=URL('static', 'js_and_css/jquery-ui.css')}}" type="text/css" />
+<link rel="stylesheet" href="{{=URL('static', 'js_and_css/style.css')}}" type="text/css" />
+<script src="{{=URL('static','js_and_css/jquery-1.8.2.js')}}"></script>
+<script src="{{=URL('static','js_and_css/jquery-ui.js')}}"></script>
+
+<style type="text/css">
+    input[type=text],
+    input[type=password] {
+        margin: 2px 0px 2px 0px;
+        width: 200px;
+    }
+
+    select {
+        margin: 2px 0px 2px 0px;
+        width: 215px;
+    }
+
+    div.error {
+        width: 200px;
+    }
+
+
+    .page_color,
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 13px;
+    }
+</style>
+
+<script>
+    $(function () {
+        // Function to initialize autocomplete
+        function setupAutocomplete(inputSelector, endpoint) {
+            var base_url = location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + "/{{=request.application}}/";
+            var listFilterStr = "";
+
+            // Fetch data list once on page load
+            $.ajax({
+                url: base_url + endpoint,
+                success: function (refStr) {
+                    listFilterStr = refStr;
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching list:", error);
+                }
+            });
+
+            // Initialize autocomplete
+            $(inputSelector).on("keyup", function () {
+                var inputValue = $(this).val().toUpperCase();
+                if (inputValue.length < 2) return; // Start autocomplete after 2 characters
+
+                var list = listFilterStr.split(",");
+                var filteredList = [];
+
+                // Filter the list based on input
+                for (let i = 0; i < list.length; i++) {
+                    let refStr = list[i].toUpperCase();
+                    if (refStr.includes(inputValue)) {
+                        filteredList.push(list[i]);
+                        if (filteredList.length >= 30) break; // Limit to 30 results
+                    }
+                }
+
+                // Update autocomplete source dynamically
+                $(inputSelector).autocomplete({
+                    source: filteredList,
+                    minLength: 2
+                });
+            });
+        }
+
+        // Set up autocomplete for All fields
+        setupAutocomplete("#branch_id_filter", "target_physician/get_branch_id_list_sm_depot");
+        setupAutocomplete("#branch_id", "target_physician/get_branch_id_list_sm_depot");
+        setupAutocomplete("#first_date_filter", "target_physician/get_first_date_list");
+    });
+</script>
+
+<body>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color:#FFFFFF;">
+        <tr height="30px">
+            <td><span class="blackCatTitle">Target Physician
+
+                </span></td>
+
+        </tr>
+        <tr height="1px" style="background-color:#CCCCCC;">
+            <td></td>
+            <td></td>
+            <td width="100"></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <!--=====Form===========-->
+
+    <table width="800">
+        <tr>
+            <td width="400">
+                <form action="{{=URL(c='target_physician',f='target_physician')}}">
+                    <table width="400" class="blackCat">
+                        <tr>
+                            <td width="140">Branch ID<span style="color: red;">*</span></td>
+                            <td><input style="width: 200px; margin-bottom: 10px;" type="text" name="branch_id"
+                                    id="branch_id" autocomplete="off" required></td>
+                        </tr>
+                        <tr>
+                            <td width="140">Gender<span style="color: red;">*</span></td>
+                            <td>
+
+                                <select required style="width: 215px; margin-bottom: 10px;" name="gender" id="gender"
+                                    class="auto_break">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </td>
+                        </tr><br>
+
+                        <tr>
+                            <td width="140">Target<span style="color: red;">*</span></td>
+                            <td><input style="width: 200px;" type="number" name="target" autocomplete="off" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="140"> First Date<span style="color: red;">*</span></td>
+                            <td><input class="date" style="width: 200px;" type="text" name="first_date" placeholder="First Date" autocomplete="off" required>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td width="12"></td>
+                            <td align="left" style="margin-left: 5px;">
+                                <div align="left" style=" margin-top: 5px;">
+                                    <input align="left" type="submit" name="submit" id="submit" value=" Save "
+                                        style="vertical-align:middle;height:30px ;border-radius:4px; background-color: green; color: white;" />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <!-- ========================END======================= -->
+
+    <!-- ================Filter/All/Download/Batch Upload============= -->
+    <table width="100%" border="1" cellpadding="1" cellspacing="1" class="sample_border">
+
+        <form id="form1" name="form1" method="post" action="{{=URL(c='target_physician',f='target_physician')}}">
+            <tr align="left" class="blackCatHead" height="20px" ;"vertical-align:middle">
+                <td width="100">
+                    <input name="branch_id_filter" type="text" id="branch_id_filter" size="25" placeholder="Branch Id"
+                        autocomplete="off" style="width:100px" />
+
+                </td>
+                <td width="100">
+                    <select name="gender_filter" id="gender_filter" style="width:100px">
+                        <option value="">Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                    <!-- <input name="gender_filter" type="text" id="gender_filter" size="25"
+                            placeholder="Gender" autocomplete="off" style="width:200px" /> -->
+
+                </td>
+                <td width="100">
+                    <input name="first_date_filter" type="text" id="first_date_filter" size="25"
+                        placeholder="First Date" autocomplete="off" style="width:100px" />
+
+                </td>
+                <td width="100">
+
+                    <input type="submit" name="btn_filter" id="btn_filter" value="Filter"
+                        style="border-radius: 4px; height: 30px; color: white; background-color: cadetblue;" class="button_update" />
+                    <input type="submit" name="btn_all" id="btn_all" value="All"
+                        style="border-radius: 4px; width: 40px; height: 30px; color: white; background-color: cadetblue;" class="button_update" />
+                </td>
+                <td align="right">
+                    <a href="{{=URL(c='target_physician',f='target_physician_download')}}">
+                        <input type="button" name="btn_download" id="btn_download" value="Download"
+                            style="border-radius: 4px; height: 30px; background-color: skyblue; color: white;" class="button_update" />
+                    </a>
+
+                    <a href="{{=URL(c='target_physician',f='target_physician_batch_upload')}}">
+                        <input type="button" name="" id="" value="Batch Upload"
+                            style="border-radius: 4px; height: 30px; background-color: skyblue; color: white;" class="button_update" />
+                    </a>
+                </td>
+            </tr>
+        </form>
+    </table>
+    <strong>Total:</strong> {{=total_rec}}<br />
+    <!--=========SHOW TABLE========-->
+    <table width="100%" border="1" cellpadding="1" cellspacing="1" class="sample_border">
+        <tr align="left" class="blackCatHead" height="20px" ;"vertical-align:middle"
+            style="background-color: rgb(200, 248, 231);">
+            <td width="300">Branch ID | Name</td>
+            <td width="100" align="left">Gender</td>
+            <td width="200" align="right">First Date</td>
+            <td width="200" align="right">Target</td>
+            <td width="200" align="right"></td>
+        </tr>
+
+        {{for j in range(len(rows)):
+        records_ov_dict = rows[j]
+        branch_id = str(records_ov_dict["branch_id"])
+        branch_name = str(records_ov_dict["branch_name"])
+        gender = str(records_ov_dict["gender"])
+        target = str(records_ov_dict["target"])
+        first_date = str(records_ov_dict["first_date"])
+        row_id = str(records_ov_dict["id"])
+        }}
+        <tr align="left" class="blackCat" style="font-size:13px">
+            <td width="300" align="left">{{=branch_id}} | {{=branch_name}}</td>
+            <td width="100" align="left">{{=gender}}</td>
+            <td width="200" align="right">{{=first_date}}</td>
+            <td width="200" align="right">{{=target}}</td>
+            <form id="form1" name="form1" method="post"
+                action="{{=URL(c='target_physician',f='target_physician_edit')}}" target="_blank">
+                <td width="200" align="right">
+                    <a href="{{=URL(c='target_physician',f='target_physician_edit',args=[row_id])}}">
+                        <input type="button" name="submit" id="submit" value="&gt;&gt;" class="button_update" />
+                    </a>
+                </td>
+            </form>
+
+        </tr>
+        </form>
+        {{pass}}
+    </table>
+    {{if page:}}
+    &nbsp;&nbsp;<a href="{{=URL(args=[page-page])}}">first</a> |
+    &nbsp;&nbsp;<a href="{{=URL(args=[page-1])}}">previous</a> |
+    {{pass}}
+    
+    {{if len(rows)>items_per_page:}}
+    &nbsp;&nbsp;<a href="{{=URL(args=[page+1])}}">next</a>
+    {{pass}}
+</body>
+
+<!-- ===========end=============== -->

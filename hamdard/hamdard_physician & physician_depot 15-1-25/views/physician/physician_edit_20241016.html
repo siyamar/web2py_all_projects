@@ -1,0 +1,96 @@
+{{extend 'layout.html'}}
+ 
+  <style type="text/css">
+	input[type=text], input[type=password],  select {
+		margin: 2px 0px 2px 0px;
+		width:250px;
+	}
+	
+	div.error {
+		width: 250px;
+	}
+	
+	#sm_doctor_gift_status{
+	width:auto;
+	}
+ </style>
+ 
+<table width="100%"  border="0" cellspacing="0" cellpadding="0" style="background-color:#FFFFFF;" >
+  <tr height="30px" >
+    <td width="300"><span class="blackCatTitle">Physician-Edit</span></td>
+    
+	<form action="{{=URL(c='physician',f='physician_add')}}" method="post">
+	<td width="200" align="right"><input name="" type="submit"  value="Back"/></td>
+	</form>
+    <td>&nbsp;</td>
+  </tr>
+  <tr  height="1px" style="background-color:#CCCCCC;">
+	    <td colspan="3" ></td>
+  </tr>
+  </table>
+  
+  
+  <table width="100%" height="500px"  border="0" cellspacing="0" cellpadding="0" class="page_color"  >
+  <tr height="100%"  style="vertical-align:top;">
+    <td>
+	<table width="50%"  border="0" cellpadding="0" cellspacing="0"  >
+      <form action="{{=URL(c='physician',f='physician_edit', args=[physician_id])}}" method="post">
+
+                  <tr class="black"> 
+                    <td width="100px" style="padding:10px"> Physician ID </td>
+                   
+                    <td>
+                    <input type="text" class="text" name="physician_id" id="physician_id" value="{{=physician_id}}"style="width:150px;padding: 5px;"/></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="100px" style="padding:10px">Physician&nbsp;Name</td>
+
+                    <td>
+                    <input type="text" class="text" name="physician_name" id="physician_name" value="{{=physician_name}}"style="width:150px;padding: 5px"/></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="100px" style="padding:10px">Mobile No</td>
+
+                    <td>
+                    <input type="text" class="text" name="physician_mobile" id="physician_mobile" value="{{=physician_mobile}}"style="width:150px;padding: 5px"/></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="100px" style="padding:10px">Password</td>
+                    <td>
+                    <input type="password" class="text" name="physician_password" id="physician_password" value="{{=physician_password}}"style="width:150px;padding: 5px"/></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                   
+                  </tr>
+                 
+                 <tr >
+                   <td width="100px" >&nbsp;</td>
+                    <td style="margin-left: 10px;">
+                      <input type="submit" name="btn_delete" id="btn_delete" value=" Delete  " style="vertical-align:middle;height:25px ;"onclick="if (!confirm('Do you really want to delete?')) { return false }">
+                    </td>
+                    <td>&nbsp;&nbsp;</td>
+                  </tr>
+
+
+                  
+                  <tr >
+                    <td width="100px" style="padding-top: 5px">&nbsp;</td>
+                     <td style="margin-left: 10px;">
+                    <input type="submit" name="update_btn" id="update_btn" value=" Update " style="vertical-align:middle;height:25px ;" >
+                    </td>
+                  </tr>
+      			
+
+                </form>
+          </table>
+       
+      </tr>
+    </table>
+	</td>
+  </tr>
+</table>
+

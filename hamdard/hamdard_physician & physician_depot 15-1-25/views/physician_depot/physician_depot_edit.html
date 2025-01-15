@@ -1,0 +1,134 @@
+{{extend 'layout.html'}}
+ 
+  <style type="text/css">
+	input[type=text], input[type=password],  select {
+		margin: 2px 0px 2px 0px;
+		width:250px;
+	}
+	
+	div.error {
+		width: 250px;
+	}
+	
+	#sm_doctor_gift_status{
+	width:auto;
+	}
+ </style>
+
+<script>
+  $(function () {
+      // Function to initialize autocomplete
+      function setupAutocomplete(inputSelector, endpoint) {
+          var base_url = location.protocol + "//" + location.hostname + (location.port && ":" + location.port) + "/{{=request.application}}/";
+          var listFilterStr = "";
+
+          // Fetch data list once on page load
+          $.ajax({
+              url: base_url + endpoint,
+              success: function (refStr) {
+                  listFilterStr = refStr;
+              },
+              error: function (xhr, status, error) {
+                  console.error("Error fetching list:", error);
+              }
+          });
+
+          // Initialize autocomplete
+          $(inputSelector).on("keyup", function () {
+              var inputValue = $(this).val().toUpperCase();
+              if (inputValue.length < 2) return; // Start autocomplete after 2 characters
+
+              var list = listFilterStr.split(",");
+              var filteredList = [];
+
+              // Filter the list based on input
+              for (let i = 0; i < list.length; i++) {
+                  let refStr = list[i].toUpperCase();
+                  if (refStr.includes(inputValue)) {
+                      filteredList.push(list[i]);
+                      if (filteredList.length >= 30) break; // Limit to 30 results
+                  }
+              }
+
+              // Update autocomplete source dynamically
+              $(inputSelector).autocomplete({
+                  source: filteredList,
+                  minLength: 2
+              });
+          });
+      }
+
+      // Set up autocomplete for All fields
+      setupAutocomplete("#physician_id", "physician_depot/physician_depot_list");
+      setupAutocomplete("#depot_id", "physician_depot/depot_list");
+  });
+</script>
+ 
+<table width="100%"  border="0" cellspacing="0" cellpadding="0" style="background-color:#FFFFFF;" >
+  <tr height="30px" >
+    <td width="300"><span class="blackCatTitle">Physician-Edit</span></td>
+    
+	<form action="{{=URL(c='physician_depot',f='physician_depot_add')}}" method="post">
+	<td width="200" align="right"><input name="" type="submit"  value="Back"/></td>
+	</form>
+    <td>&nbsp;</td>
+  </tr>
+  <tr  height="1px" style="background-color:#CCCCCC;">
+	    <td colspan="3" ></td>
+  </tr>
+  </table>
+  
+  
+  <table width="100%" height="500px"  border="0" cellspacing="0" cellpadding="0" class="page_color"  >
+  <tr height="100%"  style="vertical-align:top;">
+    <td>
+	<table width="50%"  border="0" cellpadding="0" cellspacing="0"  >
+      <form action="{{=URL(c='physician_depot',f='physician_depot_edit', args=[physician_id])}}" method="post">
+
+                  <tr>
+                    <td width="150px" style="padding:10px"> Physician ID | Name </td>
+                    <td>
+                    <input type="text" class="text" name="physician_id" id="physician_id" value="{{=physician_id}} | {{=physician_name}}"style="width:250px;padding: 5px;"/></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="150px" style="padding:10px">Depot ID | Name</td>
+                    <td>
+                    <input type="text" class="text" name="depot_id" id="depot_id" value="{{=depot_id}} | {{=depot_name}}"style="width:250px;padding: 5px"/></td>
+                    <td>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;&nbsp;</td>
+                  </tr>
+
+                  <tr >
+                   <td width="100px" >&nbsp;</td>
+                    <td style="margin-left: 10px;">
+                      <input type="submit" name="btn_delete" id="btn_delete" value=" Delete  " style="vertical-align:middle;height:25px; background-color: red; color: white;"onclick="if (!confirm('Do you really want to delete?')) { return false }">
+                    </td>
+                    <td>&nbsp;&nbsp;</td>
+                  </tr>
+                 
+                  <tr>
+                    <td width="100px" >&nbsp;</td>
+                    <td style="margin-left: 10px;">
+                      <input type="submit" name="update_btn" id="update_btn" value=" Update " style="vertical-align:middle;height:25px ; background-color: green; color: white;" >
+                    </td>
+                    <td>&nbsp;</td>
+                  </tr>
+      			
+      			<tr height="2px">
+                    <td width="100"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </form>
+          </table>
+       
+      </tr>
+    </table>
+	</td>
+  </tr>
+</table>
+

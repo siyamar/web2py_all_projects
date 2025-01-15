@@ -1,0 +1,73 @@
+{{extend 'layout.html'}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Page</title>
+</head>
+<body>
+    <table width="100%"  border="0" cellspacing="0" cellpadding="0" style="background-color:#FFFFFF;" >
+        <tr height="30px" >
+          <td width="500"><span class="blackCatTitle">Target Physician Edit</span></td>
+          <form action="{{=URL(c='target_physician',f='target_physician')}}" method="post">
+          <td width="380" align="right"><input name="" type="submit"  value="Back"/></td>
+          </form>
+          <td>&nbsp;</td>
+        </tr>
+        <tr  height="1px" style="background-color:#CCCCCC;">
+              <td colspan="3" ></td>
+        </tr>
+        </table>
+
+        <form action="{{=URL(c='target_physician',f='target_physician_edit', args = [row_id])}}">
+            <table width="400" class="blackCat">
+                <tr>
+                    <td width="200">Branch ID</td>
+                    <td><pre style= "width: 190px;" name="branch_id" id="branch_id">{{=branch_id}}</pre></td>
+                    </tr>
+                <tr>
+                    <td width="140">Gender</td>
+                    <td>
+
+                        <select  style= "width: 210px; margin-bottom: 10px;" name="gender"  class="auto_break" >
+                            {{if gender == "Male":}}
+                            <option value="{{=gender}}">{{=gender}}</option>
+                            <option  value="Female">Female</option>
+                            {{else:}}
+                            <option value="{{=gender}}">{{=gender}}</option>
+                            <option  value="Male">Male</option>
+                            {{pass}}
+                        </select>
+                    </td>
+                </tr><br>
+
+                <tr>
+                    <td width="140">Target</td>
+                    <td><input style="width: 200px; margin-bottom: 10px;" type="number" name="target" autocomplete="off" value="{{=target}}">
+                    </td>
+                </tr>
+                <tr>
+                    <td width="140"> First Date</td>
+                    <td><input class="date" style="width: 200px;" type="text" name="first_date" autocomplete="off" value="{{=first_date}}"></td>
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="padding-left: 130px;">
+                      <div align="left">
+                        <input align="left" type="submit" name="update_btn" id="update_btn" value=" Update " style="vertical-align:middle;height:30px ;border-radius:4px; background-color: rgb(85, 189, 116); color: white; width: 80px;"/>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td style="padding-left: 130px;"><input type="submit" name="delete_btn" value=" Delete " style="width: 80px; background-color: red; color: white; border-radius: 4px; vertical-align:middle;height:30px ;" onclick="if (!confirm('Do you really want to Delete?')) { return false }">
+                    </td>
+                  </tr>
+            </table>
+
+            
+        </form>
+</body>
+</html>
